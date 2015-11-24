@@ -25,7 +25,7 @@ x_train<- tbl_df(x_train) # tbl class
 sub_test<-read.table("./UCI HAR Dataset/test/subject_test.txt") # Subject Id
 y_test<-read.table("./UCI HAR Dataset/test/y_test.txt")  # Activities
 x_test<- read.table("./UCI HAR Dataset/test/X_test.txt") # Test Set
-x_test<- cbind(sub_test,y_test,x_test) # Binding Train Data
+x_test<- cbind(sub_test,y_test,x_test) # Binding Test Data
 x_test<- tbl_df(x_test) # tbl class
 
 
@@ -39,13 +39,13 @@ colnames(dataset)<- c("subject", "activity", paste(fea[[1]]))
 names (dataset)
 
 # 2. Extracts only the measurements on the mean and standard deviation for each measurement. 
-MeanStdNames<-fea[[1]][grep("mean\\(\\)|std\\(\\)", fea[[1]])]
-MeanStdData<-dataset[,c('subject','activity',MeanStdNames)]
+MeanStdNames<-fea[[1]][grep("mean\\(\\)|std\\(\\)", fea[[1]])] # Selecting mean and standard deviation variables names
+MeanStdData<-dataset[,c('subject','activity',MeanStdNames)] # Subsetting dataset through selecting mean and standard deviation variables
 
 # 3. Uses descriptive activity names to name the activities in the data set
 act_labels<-read.table("./UCI HAR Dataset/activity_labels.txt", colClasses = c('numeric', 'character'))[,2] # Loading Activity Names
 
-for (i in 1:nrow(dataset)){
+for (i in 1:nrow(dataset)){ # 'For' loop to change activity code by activity names
     if (dataset$activity[i] == 1){
         dataset$activity[i]<-act_labels[1]
     } else if (dataset$activity[i] == 2){
@@ -61,7 +61,8 @@ for (i in 1:nrow(dataset)){
 
 dataset$activity
 
-# 4. Appropriately labels the data set with descriptive variable names. 
+# 4. Appropriately labels the data set with descriptive variable names.
+
 names(dataset)<-gsub("^t", "time", names(dataset))
 names(dataset)<-gsub("^f", "frequency", names(dataset))
 names(dataset)<-gsub("Acc", "Accelerometer", names(dataset))
